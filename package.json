@@ -45,15 +45,15 @@
     "vite-react-jsx": "^1.1.2"
   },
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "serve": "vite preview",
-    "eslint": "eslint --cache src",
-    "eslint-fix": "eslint --fix --cache src",
-    "prettier": "prettier --list-different '**/*.{js,jsx,md,ts,tsx}'",
-    "prettier-fix": "prettier --write '**/*.{js,jsx,md,ts,tsx}'",
-    "prepare": "husky install"
-  },
+  "dev": "vite --port 3000",
+  "build": "tsc && vite build",
+  "serve": "vite preview --port 3000",
+  "eslint": "eslint --cache src",
+  "eslint-fix": "eslint --fix --cache src",
+  "prettier": "prettier --list-different '**/*.{js,jsx,md,ts,tsx}'",
+  "prettier-fix": "prettier --write '**/*.{js,jsx,md,ts,tsx}'",
+  "prepare": "husky install"
+},
   "browserslist": [
     ">0.2%",
     "not dead",
