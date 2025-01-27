@@ -107,17 +107,30 @@ export const Chassis = forwardRef<Group, PropsWithChildren<BoxProps>>(({ args = 
   let camera: Camera
   let controls: Controls
   useFrame((_, delta) => {
-    camera = getState().camera
-    controls = getState().controls
-    brake.current.material.color.lerp(c.set(controls.brake ? '#555' : 'white'), delta * 10)
-    brake.current.material.emissive.lerp(c.set(controls.brake ? 'red' : 'red'), delta * 10)
-    brake.current.material.opacity = lerp(brake.current.material.opacity, controls.brake ? 1 : 0.3, delta * 10)
-    glass.current.material.opacity = lerp(glass.current.material.opacity, camera === 'FIRST_PERSON' ? 0.1 : 0.75, delta)
-    glass.current.material.color.lerp(c.set(camera === 'FIRST_PERSON' ? 'white' : 'black'), delta)
-    if (wheel.current) wheel.current.rotation.z = lerp(wheel.current.rotation.z, controls.left ? -Math.PI : controls.right ? Math.PI : 0, delta)
-    needle.current.rotation.y = (mutation.speed / maxSpeed) * -Math.PI * 2 - 0.9
-    chassis_1.current.material.color.lerp(c.set(getState().color), 0.1)
-  })
+    camera = getState().camera;
+    controls = getState().controls;
+  
+    // Brake lights
+    brake.current.material.color.lerp(c.set(controls.brake ? '#555' : 'white'), delta * 10);
+    brake.current.material.emissive.lerp(c.set(controls.brake ? 'red' : 'red'), delta * 10);
+    brake.current.material.opacity = lerp(brake.current.material.opacity, controls.brake ? 1 : 0.3, delta * 10);
+  
+    // Glass opacity and color
+    glass.current.material.opacity = lerp(glass.current.material.opacity, camera === 'FIRST_PERSON' ? 0.1 : 0.75, delta);
+    glass.current.material.color.lerp(c.set(camera === 'FIRST_PERSON' ? 'white' : 'black'), delta);
+  
+    // Steering wheel rotation with damping
+    if (wheel.current) {
+      const targetRotation = controls.left ? -Math.PI / 4 : controls.right ? Math.PI / 4 : 0; // Limit steering angle
+      wheel.current.rotation.z = lerp(wheel.current.rotation.z, targetRotation, delta * 2); // Slow down interpolation
+    }
+  
+    // Speedometer needle
+    needle.current.rotation.y = (mutation.speed / maxSpeed) * -Math.PI * 2 - 0.9;
+  
+    // Body color
+    chassis_1.current.material.color.lerp(c.set(getState().color), 0.1);
+  });
 
   return (
     <group ref={ref} dispose={null}>

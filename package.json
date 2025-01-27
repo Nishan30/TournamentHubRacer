@@ -1,7 +1,7 @@
 {
-  "name": "@pmndrs/racing-game",
+  "name": "tournamenthubracer",
   "version": "1.0.0",
-  "description": "🏎️ Open source racing game developed by anyone willing",
+  "description": "🏎️ Race and get the best timing.",
   "keywords": [
     "physics",
     "cannon-es",

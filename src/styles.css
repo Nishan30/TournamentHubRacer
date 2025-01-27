@@ -92,67 +92,98 @@ body {
 /* --------------- Leaderboard --------------- */
 
 .finished {
-  align-items: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  height: 100%;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.9);
+  color: white;
+  font-family: 'Arial', sans-serif;
   text-align: center;
-  background: #101010;
-  bottom: 0;
-  position: absolute;
-  width: 100vw;
-  z-index: 10;
+  padding: 20px;
 }
 
 .finished-header {
-  max-height: 120px;
+  margin-bottom: 20px;
+}
+
+.finished-header h1 {
+  font-size: 2.5rem;
+  margin: 0;
+  color: #ff4757;
+}
+
+.finished-header p {
+  font-size: 1.5rem;
+  margin: 10px 0 0;
+}
+
+.finished-header .time {
+  font-weight: bold;
+  color: #ff6b81;
 }
 
 .finished-leaderboard {
-  flex: 1;
-  overflow-y: scroll;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 20px;
+  border-radius: 10px;
+  width: 80%;
+  max-width: 600px;
+  margin-bottom: 20px;
+}
+
+.finished-leaderboard h2 {
+  font-size: 2rem;
+  margin: 0 0 10px;
 }
 
 .finished-auth {
-  height: auto;
+  margin-bottom: 20px;
 }
 
-.finished-restart {
-  align-items: center;
-  display: flex;
-  height: 60px;
+.finished-auth h3 {
+  font-size: 1.5rem;
+  margin: 0 0 10px;
 }
 
-.leaderboard-name img {
-  position: relative;
-  right: 2px;
-  margin-right: 2px;
+.finished-auth .position {
+  color: #ff6b81;
+  font-weight: bold;
 }
 
-.leaderboard-bottom li {
-  margin-bottom: 10px;
-  text-align: center;
-  counter-increment: listCounter;
+.submit-score-btn {
+  background: #ff4757;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease;
 }
 
-.leaderboard b {
-  margin-right: 5px;
+.submit-score-btn:hover {
+  background: #ff6b81;
 }
 
-.leaderboard li {
-  margin-bottom: 10px;
-  text-align: center;
-  counter-increment: listCounter;
-  justify-content: space-between;
+.restart-btn {
+  background: #1e90ff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease;
 }
 
-.leaderboard-bottom {
-  list-style: none;
-  padding: 0;
-  margin-top: 20px;
-  counter-reset: listCounter;
-  max-height: auto;
-  overflow: auto;
+.restart-btn:hover {
+  background: #70a1ff;
 }
 
 /* --------------- COLORPICKER --------------- */
@@ -356,11 +387,73 @@ button {
   width: 100%;
   height: 100%;
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
-  transition: all 1s;
-  z-index: 9999;
+  background: linear-gradient(135deg, #1e3c72, #2a5298);
+  color: white;
+  font-family: 'Arial', sans-serif;
+}
+
+.loading {
+  opacity: 0.8;
+}
+
+.loaded {
+  opacity: 1;
+}
+
+.clicked {
+  display: none;
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.title-container {
+  text-align: center;
+}
+
+.title {
+  font-size: 3rem;
+  font-weight: bold;
+  margin: 0;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.car-icons {
+  font-size: 2rem;
+  margin-top: 10px;
+}
+
+.start-container {
+  margin-top: 20px;
+}
+
+.start-link {
+  font-size: 1.5rem;
+  color: white;
+  text-decoration: none;
+  background: #ff4757;
+  padding: 10px 20px;
+  border-radius: 5px;
+  transition: background 0.3s ease;
+}
+
+.start-link:hover {
+  background: #ff6b81;
+}
+
+.keys-container {
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 10px;
+  border-radius: 5px;
 }
 
 .stack {
