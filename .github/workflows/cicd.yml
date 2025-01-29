@@ -35,4 +35,4 @@ jobs:
       run: docker pull nishan2030/tournamenthubracer:latest
 
     - name: Run docker container
-      run: docker run -d -p 3000:3000 --name tournamenthubracer-container nishan2030/tournamenthubracer
+      run: docker run -d -p 80:80 --name tournamenthubracer-container nishan2030/tournamenthubracer
