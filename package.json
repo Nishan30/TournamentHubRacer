@@ -49,9 +49,9 @@
     "vite-react-jsx": "^1.1.2"
   },
   "scripts": {
-    "dev": "vite --port 3000",
+    "dev": "vite --port 80",
     "build": "tsc && vite build",
-    "serve": "vite preview --port 3000",
+    "serve": "vite preview --port 80",
     "eslint": "eslint --cache src",
     "eslint-fix": "eslint --fix --cache src",
     "prettier": "prettier --list-different '**/*.{js,jsx,md,ts,tsx}'",
