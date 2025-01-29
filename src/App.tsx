@@ -12,6 +12,7 @@ import { BoundingBox, Ramp, Track, Vehicle, Goal, Train, Heightmap } from './mod
 import { angularVelocity, levelLayer, position, rotation, useStore } from './store'
 import { Checkpoint, Clock, Speed, Minimap, Intro, Help, Editor, LeaderBoard, Finished, PickColor } from './ui'
 import { useToggle } from './useToggle'
+import { useSearchParams } from 'react-router-dom'
 
 const layers = new Layers()
 layers.enable(levelLayer)
@@ -28,7 +29,6 @@ export function App(): JSX.Element {
   const ToggledMap = useToggle(Minimap, 'map')
   const ToggledOrbitControls = useToggle(OrbitControls, 'editor')
   const ToggledStats = useToggle(Stats, 'stats')
-
   return (
     <Intro>
       <Canvas key={`${dpr}${shadows}`} dpr={[1, dpr]} shadows={shadows} camera={{ position: [0, 5, 15], fov: 50 }}>

@@ -4,18 +4,46 @@ import { getScores, insertScore } from '../data';
 import { readableTime, Scores } from './LeaderBoard';
 import { Auth } from './Auth';
 import type { SavedScore } from '../data';
+import { useSearchParams } from 'react-router-dom';
+import { checkConnection, retrievePublicKey } from '../contract/connectWallet';
+import toast from "react-hot-toast";
+import { recordMatchResult } from '../contract/tournamentContract';
 
 export const Finished = (): JSX.Element => {
   const [reset, session, time] = useStore(({ actions: { reset }, finished, session }) => [reset, session, finished]);
   const [scoreId, setScoreId] = useState<SavedScore['id']>('');
   const [scores, setScores] = useState<SavedScore[]>([]);
   const [position, setPosition] = useState<number>(0);
-
-  const isAuthenticated = session?.user?.aud === 'authenticated';
-
+  const [isRegistering, setIsRegistering] = useState(false);
   const user = session?.user?.user_metadata;
   const name: string = user?.full_name;
   const thumbnail: string = user?.avatar_url;
+  const [connectStatus, setConnectStatus] = useState("Connect");
+  const [publicKey, setPublicKey] = useState("Wallet not Connected...");
+  const [searchParams] = useSearchParams(); // Access search params
+  const scoreIdParam = searchParams.get('tourId');
+  console.log(scoreIdParam);
+
+  useEffect(() => {
+    if (publicKey !== "Wallet not Connected...") {
+      setConnectStatus("Connected!");
+    }
+  }, [publicKey]);
+
+  // Connect wallet
+  const connectWallet = async () => {
+    try {
+      if (await checkConnection()) {
+        const pk = await retrievePublicKey();
+        setPublicKey(pk);
+        toast.success("Wallet connected successfully!");
+      } else {
+        toast.error("Failed to connect wallet.");
+      }
+    } catch (error) {
+      toast.error("Error connecting wallet");
+    }
+  };
 
   const updatePosition = () => {
     const index = scores.findIndex((score) => score.id === scoreId);
@@ -26,7 +54,36 @@ export const Finished = (): JSX.Element => {
     getScores().then(setScores);
   };
 
-  const sendScore = () => {
+  const sendScore = async () => {
+    if (!scoreIdParam) {
+      toast.error("Please use a valid url.");
+      return;
+    }
+
+    if (publicKey === "Wallet not Connected...") {
+      toast.error("Please connect your wallet first");
+      return;
+    }
+
+    let scoreCalc = (60 * 1000)/time;
+    setIsRegistering(true);
+    try {
+      await recordMatchResult(Number(scoreIdParam),scoreCalc);
+      toast.success("Successfully registered for tournament!");
+      // Refresh tournament details after registration
+      //handleFetchTournament();
+    } catch (error) {
+      toast.error("Failed to register for tournament");
+    } finally {
+      setIsRegistering(false);
+    }
+    insertScore({ name, thumbnail, time })
+      .then(([{ id }]) => setScoreId(id))
+      .then(updateScores)
+      .then(updatePosition);
+  };
+
+  const checkLeaderboard = () => {
     insertScore({ name, thumbnail, time })
       .then(([{ id }]) => setScoreId(id))
       .then(updateScores)
@@ -52,24 +109,16 @@ export const Finished = (): JSX.Element => {
 
       {/* Authentication and Score Submission Section */}
       <div className="finished-auth">
-        {isAuthenticated ? (
-          <>
-            {scoreId ? (
-              position ? (
-                <h3>You are number <span className="position">#{position}</span> on the leaderboard!</h3>
-              ) : null
-            ) : (
-              <>
                 <h3>You belong on our leaderboard, {name}! 🏆</h3>
                 <button onClick={sendScore} className="submit-score-btn">
                   Submit My Score
                 </button>
-              </>
-            )}
-          </>
-        ) : (
-          <Auth />
-        )}
+      </div>
+
+      <div className="leaderboard-check">
+        <button className="restart-btn" onClick={checkLeaderboard}>
+          Check Leaderboard
+        </button>
       </div>
 
       {/* Restart Button */}
