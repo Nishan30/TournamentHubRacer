@@ -2,6 +2,7 @@ import { usePlane } from '@react-three/cannon'
 import { useStore } from '../store'
 
 import type { Triplet } from '@react-three/cannon'
+import { useEffect, useState } from 'react'
 
 type Props = {
   depth: number
@@ -11,11 +12,30 @@ type Props = {
 }
 
 export const BoundingBox = ({ depth, height, position: [x, y, z], width }: Props) => {
-  const [onCollide] = useStore(({ actions: { reset } }) => [reset])
+  const [reset] = useStore(({ actions: { reset } }) => [reset])
+  const [showResetMessage, setShowResetMessage] = useState(false)
+
+  // Handle collision
+  const handleCollision = () => {
+    setShowResetMessage(true)
+  }
+
+  // Handle key press
+  useEffect(() => {
+    const handleKeyPress = (event: KeyboardEvent) => {
+      if (event.key.toLowerCase() === 'r' && showResetMessage) {
+        reset()
+        setShowResetMessage(false)
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyPress)
+    return () => window.removeEventListener('keydown', handleKeyPress)
+  }, [reset, showResetMessage])
 
   const sharedProps = {
     isTrigger: true,
-    onCollide,
+    onCollide: handleCollision,
     userData: { trigger: true },
   }
 

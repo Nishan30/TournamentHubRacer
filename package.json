@@ -17,6 +17,7 @@
     "@stellar/freighter-api": "^2.0.0",
     "@stellar/stellar-sdk": "^13.1.0",
     "@supabase/supabase-js": "^1.30.4",
+    "buffer": "^6.0.3",
     "inter-ui": "^3.19.3",
     "leva": "^0.9.21",
     "lodash-es": "^4.17.21",
