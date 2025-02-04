@@ -4,23 +4,40 @@ import { getScores } from '../data'
 import { readableTime } from './LeaderBoard'
 import type { SavedScore } from '../data'
 import { useSearchParams } from 'react-router-dom'
-import { checkConnection, retrievePublicKey } from '../contract/connectWallet'
 import toast from 'react-hot-toast'
 import { recordMatchResult, getLeaderboard } from '../contract/tournamentContract'
 import { StrKey } from '@stellar/stellar-sdk'
 import { Buffer } from 'buffer'
+import type { ISupportedWallet } from 'stellar-wallets-kit'
+import { StellarWalletsKit, WalletNetwork, WalletType } from 'stellar-wallets-kit'
+
+const kit: StellarWalletsKit = new StellarWalletsKit({
+  selectedWallet: WalletType.ALBEDO,
+  network: WalletNetwork.TESTNET,
+})
+
+// Set the client in your kit
+kit.startWalletConnect({
+  projectId: import.meta.env.VITE_WALLETCONNECT_PROJECT_ID as string,
+  name: 'Tournament Hub',
+  description: 'Seamless Tournament Experience',
+  url: 'https://tournamenthub.xyz',
+  icons: ['https://avatars.mywebsite.com/'],
+})
 
 export const Finished = (): JSX.Element => {
   const [reset, time] = useStore(({ actions: { reset }, finished }) => [reset, finished])
   const [scoreId] = useState<SavedScore['id']>('')
   const [scores, setScores] = useState<SavedScore[]>([])
   const [isRegistering, setIsRegistering] = useState(false)
-  const [connectStatus, setConnectStatus] = useState('Connect')
   const [publicKey, setPublicKey] = useState('Wallet not Connected...')
   const [searchParams] = useSearchParams() // Access search params
   const scoreIdParam = searchParams.get('tourId')
   const [blockchainLeaderboard, setBlockchainLeaderboard] = useState<PlayerScore[]>([])
   const [isFetchingLeaderboard, setIsFetchingLeaderboard] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [showWallets, setShowWallets] = useState(false)
+  const [wallets, setWallets] = useState<ISupportedWallet[]>([])
 
   const truncateAddress = (address: string) => {
     if (address.length <= 8) return address
@@ -33,23 +50,37 @@ export const Finished = (): JSX.Element => {
   }
 
   useEffect(() => {
-    if (publicKey !== 'Wallet not Connected...') {
-      setConnectStatus('Connected!')
+    const loadWallets = async () => {
+      try {
+        const supported = await StellarWalletsKit.getSupportedWallets()
+        setWallets(supported)
+      } catch (err) {
+        console.error(err)
+      }
     }
-  }, [publicKey])
+    loadWallets()
+  }, [])
 
   // Connect wallet
-  const connectWallet = async () => {
+  const handleConnectWallet = async (walletType: WalletType) => {
     try {
-      if (await checkConnection()) {
-        const pk = await retrievePublicKey()
-        setPublicKey(pk)
-        toast.success('Wallet connected successfully!')
-      } else {
-        toast.error('Failed to connect wallet.')
+      setLoading(true)
+
+      kit.setWallet(walletType)
+      if (walletType === WalletType.WALLET_CONNECT) {
+        await kit.connectWalletConnect()
       }
-    } catch (error) {
-      toast.error('Error connecting wallet')
+      const pk = await kit.getPublicKey()
+      setPublicKey(pk)
+    } catch (err) {
+      if (err instanceof Error) {
+        console.log(`Connection failed: ${err.message}`)
+      } else {
+        console.log('Connection failed: Unknown error')
+      }
+    } finally {
+      setLoading(false)
+      setShowWallets(false)
     }
   }
 
@@ -79,7 +110,7 @@ export const Finished = (): JSX.Element => {
 
     setIsRegistering(true)
     try {
-      await recordMatchResult(Number(scoreIdParam), scoreCalc)
+      await recordMatchResult(Number(scoreIdParam), kit, scoreCalc, publicKey)
       toast.success('Successfully registered for tournament!')
     } catch (error) {
       toast.error('Failed to register for tournament')
@@ -100,7 +131,7 @@ export const Finished = (): JSX.Element => {
 
     setIsFetchingLeaderboard(true)
     try {
-      const leaderboard = await getLeaderboard(Number(scoreIdParam))
+      const leaderboard = await getLeaderboard(Number(scoreIdParam), kit, publicKey)
       console.log('Leaderboard fetched successfully:', leaderboard)
 
       // Process the leaderboard data
@@ -168,12 +199,32 @@ export const Finished = (): JSX.Element => {
           </p>
         </div>
 
-        {/* Wallet Section */}
-        <div className="wallet-section">
-          <button onClick={connectWallet} className={`wallet-button ${connectStatus === 'Connected!' ? 'connected' : ''}`}>
-            {connectStatus}
-          </button>
-          {publicKey !== 'Wallet not Connected...' && <div className="wallet-address">{truncateAddress(publicKey)}</div>}
+        <div className="wallet-connect-container max-w-xs mx-auto mb-6">
+          <div className="relative">
+            <button className={`wallet-button ${publicKey.startsWith('G') ? 'connected' : ''}`} onClick={() => setShowWallets(!showWallets)} disabled={loading}>
+              {loading ? <>Connecting...</> : <>{publicKey.startsWith('G') ? 'Connected' : 'Connect Wallet'}</>}
+            </button>
+
+            {showWallets && (
+              <div className="wallet-dropdown">
+                {wallets.map(
+                  (wallet) =>
+                    wallet.isAvailable && (
+                      <button key={wallet.type} className="wallet-option" onClick={() => handleConnectWallet(wallet.type)}>
+                        <img src={wallet.icon} alt={wallet.name} className="w-6 h-6 object-contain" />
+                        <span className="text-sm">{wallet.name}</span>
+                      </button>
+                    ),
+                )}
+              </div>
+            )}
+          </div>
+
+          {publicKey.startsWith('G') && (
+            <div className="connection-status mt-3">
+              Connected: <span>{truncateAddress(publicKey)}</span>
+            </div>
+          )}
         </div>
 
         {/* Leaderboard Section */}
@@ -181,7 +232,7 @@ export const Finished = (): JSX.Element => {
           <div className="leaderboard-header">
             <h2>Tournament Leaderboard</h2>
             <button onClick={fetchBlockchainLeaderboard} className="secondary-button" disabled={isFetchingLeaderboard}>
-              {isFetchingLeaderboard ? 'Refreshing...' : 'Refresh Leaderboard'}
+              {isFetchingLeaderboard ? 'Refreshing...' : 'Refresh'}
             </button>
           </div>
 
@@ -211,12 +262,12 @@ export const Finished = (): JSX.Element => {
 
         {/* Action Buttons */}
         <div className="action-buttons">
-          <button onClick={sendScore} disabled={isRegistering} className="submit-button">
-            {isRegistering ? 'Submitting Score...' : 'Submit Tournament Score'}
+          <button onClick={sendScore} className="submit-button" disabled={isRegistering}>
+            {isRegistering ? 'Submitting...' : 'Submit Tournament Score'}
           </button>
 
           <div className="button-group">
-            <button onClick={fetchBlockchainLeaderboard} disabled={isFetchingLeaderboard} className="secondary-button">
+            <button onClick={fetchBlockchainLeaderboard} className="secondary-button" disabled={isFetchingLeaderboard}>
               {isFetchingLeaderboard ? 'Refreshing...' : 'Refresh Leaderboard'}
             </button>
             <button onClick={reset} className="secondary-button">
