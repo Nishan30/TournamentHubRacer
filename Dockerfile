@@ -2,6 +2,8 @@
 FROM node:16-alpine as build
 WORKDIR /app
 COPY package*.json ./
+# Install Git (Use apk for Alpine)
+RUN apk add --no-cache git
 RUN npm install
 COPY . .
 RUN npm run build
