@@ -11,6 +11,8 @@ jobs:
     steps: 
       - name: Checkout Source
         uses: actions/checkout@v4
+      - name: Create .env file
+        run: echo "VITE_WALLETCONNECT_PROJECT_ID =${{ secrets.WALLETCONNECT_PROJECT_ID}}" >> .env
       - name: Build docker image
         run: docker build -t nishan2030/tournamenthubracer .
       - name: Login to docker hub
