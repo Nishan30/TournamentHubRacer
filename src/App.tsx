@@ -12,9 +12,15 @@ import { BoundingBox, Ramp, Track, Vehicle, Goal, Train, Heightmap } from './mod
 import { angularVelocity, levelLayer, position, rotation, useStore } from './store'
 import { Clock, Speed, Minimap, Intro, Help, Editor, LeaderBoard, Finished, PickColor } from './ui'
 import { useToggle } from './useToggle'
+import { useGLTF, useTexture } from '@react-three/drei'
 
 const layers = new Layers()
 layers.enable(levelLayer)
+
+useTexture.preload('/textures/heightmap_1024.png')
+useGLTF.preload('/models/track-draco.glb')
+useGLTF.preload('/models/chassis-draco.glb')
+useGLTF.preload('/models/wheel-draco.glb')
 
 export function App(): JSX.Element {
   const [light, setLight] = useState<DirectionalLight | null>(null)

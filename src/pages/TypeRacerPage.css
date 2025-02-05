@@ -1,0 +1,55 @@
+.type-racer-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px;
+    min-height: 100vh;
+    color: white;
+}
+
+.type-racer-page h1 {
+    font-size: 3rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+    background: linear-gradient(to right, #3b82f6, #8b5cf6);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: 0 0 30px rgba(59, 130, 246, 0.5);
+}
+
+.stats {
+    background: rgba(30, 41, 59, 0.7);
+    backdrop-filter: blur(12px);
+    border-radius: 12px;
+    padding: 15px 30px;
+    font-size: 1.2rem;
+    color: #e2e8f0;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.restart-button {
+    margin-top: 15px;
+    padding: 12px 30px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(to right, #3b82f6, #8b5cf6);
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.restart-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+}
+
+.restart-button:active {
+    transform: translateY(0);
+}
