@@ -6,14 +6,14 @@ import { Sky, Environment, PerspectiveCamera, OrbitControls, Stats } from '@reac
 
 import type { DirectionalLight } from 'three'
 
-import { HideMouse, Keyboard } from './controls'
-import { Cameras } from './effects'
-import { BoundingBox, Ramp, Track, Vehicle, Goal, Train, Heightmap } from './models'
-import { angularVelocity, levelLayer, position, rotation, useStore } from './store'
-import { Clock, Speed, Minimap, Intro, Help, Editor, LeaderBoard, Finished, PickColor } from './ui'
-import { useToggle } from './useToggle'
+import { HideMouse, Keyboard } from '../controls'
+import { Cameras } from '../effects'
+import { BoundingBox, Ramp, Track, Vehicle, Goal, Train, Heightmap } from '../models'
+import { angularVelocity, levelLayer, position, rotation, useStore } from '../store'
+import { Clock, Speed, Minimap, Intro, Help, Editor, LeaderBoard, Finished, PickColor } from '../ui'
+import { useToggle } from '../useToggle'
 import { useGLTF, useTexture } from '@react-three/drei'
-import './styles.css'
+import './CarRacer.css'
 
 const layers = new Layers()
 layers.enable(levelLayer)

@@ -11,6 +11,7 @@
   "main": "src/main.jsx",
   "dependencies": {
     "@pmndrs/branding": "^0.0.8",
+    "@react-oauth/google": "^0.12.1",
     "@react-three/cannon": "^6.3.0",
     "@react-three/drei": "^9.4.4",
     "@react-three/fiber": "^8.0.12",
@@ -19,6 +20,7 @@
     "@supabase/supabase-js": "^1.30.4",
     "buffer": "^6.0.3",
     "inter-ui": "^3.19.3",
+    "jwt-decode": "^4.0.0",
     "leva": "^0.9.21",
     "lodash-es": "^4.17.21",
     "lucide-react": "^0.474.0",
