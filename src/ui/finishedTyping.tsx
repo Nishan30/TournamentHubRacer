@@ -27,7 +27,7 @@ const kit: StellarWalletsKit = new StellarWalletsKit({
 
 // Initialize WalletConnect
 kit.startWalletConnect({
-  projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID as string,
+  projectId: import.meta.env.VITE_WALLETCONNECT_PROJECT_ID as string,
   name: 'Type Racer',
   description: 'Type Racing Game',
   url: window.location.origin,
