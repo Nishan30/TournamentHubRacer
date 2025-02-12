@@ -107,12 +107,12 @@ const WordDisplay: React.FC<WordDisplayProps> = ({ onWordTyped, onGameStart, isG
           return (
             <span key={index} className={`word ${isCurrent ? 'current' : isCompleted ? 'completed' : 'upcoming'} ${animatedClass}`}>
               {isCurrent
-                ? currentWord.split('').map((letter, letterIndex) => (
-                    <span key={letterIndex} className={`letter ${getLetterClassName(letterIndex)}`}>
-                      {letter}
-                    </span>
-                  ))
-                : wordPair + ' '}
+  ? currentWord.split('').map((letter, letterIndex) => (
+      <span key={letterIndex} className={`letter ${getLetterClassName(letterIndex)}`}>
+        {letter === ' ' ? '\u00A0' : letter} {/* Preserve space using non-breaking space */}
+      </span>
+    ))
+  : wordPair + ' '}
             </span>
           )
         })}

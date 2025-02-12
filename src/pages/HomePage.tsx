@@ -1,7 +1,7 @@
 import React from 'react'
 import { Gamepad2, Trophy, Users, Rocket, MessageSquare, TrendingUp, Clock, Medal } from 'lucide-react'
 
-import './homePage.css'
+import './HomePage.css'
 
 export const HomePage = (): JSX.Element => {
   const games = [

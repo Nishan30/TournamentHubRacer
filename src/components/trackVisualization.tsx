@@ -8,11 +8,9 @@ interface TrackVisualizationProps {
 
 const TrackVisualization: React.FC<TrackVisualizationProps> = ({ progress }) => {
   const [carPosition, setCarPosition] = useState(0)
-  const [showBoost, setShowBoost] = useState(false)
 
   useEffect(() => {
     setCarPosition(progress * 100)
-    setShowBoost(progress > 0 && progress < 1)
   }, [progress])
 
   return (
@@ -32,13 +30,6 @@ const TrackVisualization: React.FC<TrackVisualizationProps> = ({ progress }) => 
         </div>
         <div className="car" style={{ left: `${carPosition}%` }}>
           🏎️
-          {showBoost && (
-            <div className="boost">
-              <Flame className="flame" size={24} />
-              <Flame className="flame flame-2" size={20} />
-              <Flame className="flame flame-3" size={16} />
-            </div>
-          )}
         </div>
       </div>
     </div>

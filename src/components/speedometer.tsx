@@ -79,7 +79,7 @@ const Speedometer: React.FC<SpeedometerProps> = ({ speed }) => {
 
   return (
     <div className="speedometer-container">
-      <canvas ref={canvasRef} width={300} height={300} className="speedometer-canvas" />
+      <canvas ref={canvasRef} width={200} height={200} className="speedometer-canvas" />
       <div className="speed-category" style={{ color }}>
         {label}
       </div>

@@ -2,13 +2,13 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 40px 20px;
+    padding: 20px 10px;
     min-height: 100vh;
     color: white;
 }
 
 .type-racer-page h1 {
-    font-size: 3rem;
+    font-size: 2rem;
     font-weight: bold;
     margin-bottom: 20px;
     background: linear-gradient(to right, #3b82f6, #8b5cf6);
@@ -22,7 +22,7 @@
     background: rgba(30, 41, 59, 0.7);
     backdrop-filter: blur(12px);
     border-radius: 12px;
-    padding: 15px 30px;
+    padding: 5px 10px;
     font-size: 1.2rem;
     color: #e2e8f0;
     text-align: center;
@@ -32,7 +32,7 @@
 
 .restart-button {
     margin-top: 15px;
-    padding: 12px 30px;
+    padding: 5px 10px;
     font-size: 1.1rem;
     font-weight: 600;
     border: none;

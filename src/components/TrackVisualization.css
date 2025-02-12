@@ -1,12 +1,12 @@
 .track-container {
     width: 90%;
-    max-width: 800px;
-    margin: 40px auto;
+    max-width: 600px;
+    margin: 10px auto;
     perspective: 1000px;
 }
 
 .track {
-    height: 80px;
+    height: 60px;
     background: linear-gradient(to bottom, #1a1a1a, #2a2a2a);
     border-radius: 40px;
     position: relative;
