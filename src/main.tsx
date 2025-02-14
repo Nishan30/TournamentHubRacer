@@ -4,13 +4,17 @@ import { BrowserRouter } from 'react-router-dom'
 import { Route, Routes } from 'react-router-dom'
 import TypeRacerPage from './pages/TypeRacerPage'
 import { HomePage } from './pages/HomePage'
+import { GoogleOAuthProvider } from '@react-oauth/google'
 
 createRoot(document.getElementById('root')!).render(
-  <BrowserRouter>
-    <Routes>
-      <Route path="/" element={<HomePage />} /> {/* Updated */}
-      <Route path="/car-racer" element={<App />} />
-      <Route path="/type-racer" element={<TypeRacerPage />} />
-    </Routes>
-  </BrowserRouter>,
+  <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID as string}>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<HomePage />} /> {/* Updated */}
+        <Route path="/car-racer" element={<App />} />
+        <Route path="/type-racer" element={<TypeRacerPage />} />
+      </Routes>
+    </BrowserRouter>
+    ,
+  </GoogleOAuthProvider>,
 )

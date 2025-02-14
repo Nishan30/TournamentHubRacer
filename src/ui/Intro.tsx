@@ -1,29 +1,27 @@
-import { Suspense, useEffect, useState } from 'react';
-import { Footer } from '@pmndrs/branding';
-import { useProgress } from '@react-three/drei';
-import type { ReactNode } from 'react';
-import { useStore } from '../store';
-import { setupSession, unAuthenticateUser } from '../data';
-import { Keys } from './Keys';
-import { Auth } from './Auth';
+import { Suspense, useEffect, useState } from 'react'
+import { useProgress } from '@react-three/drei'
+import type { ReactNode } from 'react'
+import { useStore } from '../store'
+import { setupSession } from '../data'
+import { Keys } from './Keys'
 
 export function Intro({ children }: { children: ReactNode }): JSX.Element {
-  const [clicked, setClicked] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const { progress } = useProgress();
-  const [session, set] = useStore((state) => [state.session, state.set]);
+  const [clicked, setClicked] = useState(false)
+  const [loading, setLoading] = useState(true)
+  const { progress } = useProgress()
+  const [set] = useStore((state) => [state.set])
 
   useEffect(() => {
-    if (clicked && !loading) set({ ready: true });
-  }, [clicked, loading]);
+    if (clicked && !loading) set({ ready: true })
+  }, [clicked, loading])
 
   useEffect(() => {
-    if (progress === 100) setLoading(false);
-  }, [progress]);
+    if (progress === 100) setLoading(false)
+  }, [progress])
 
   useEffect(() => {
-    setupSession(set);
-  }, []);
+    setupSession(set)
+  }, [])
 
   return (
     <>
@@ -34,9 +32,15 @@ export function Intro({ children }: { children: ReactNode }): JSX.Element {
           <div className="title-container">
             <h1 className="title">Tournament Hub Racer</h1>
             <div className="car-icons">
-              <span role="img" aria-label="car">🏎️</span>
-              <span role="img" aria-label="car">🚗</span>
-              <span role="img" aria-label="car">🚙</span>
+              <span role="img" aria-label="car">
+                🏎️
+              </span>
+              <span role="img" aria-label="car">
+                🚗
+              </span>
+              <span role="img" aria-label="car">
+                🚙
+              </span>
             </div>
           </div>
 
@@ -74,5 +78,5 @@ export function Intro({ children }: { children: ReactNode }): JSX.Element {
         /> */}
       </div>
     </>
-  );
+  )
 }

@@ -3,6 +3,7 @@ import WordDisplay from '../components/wordDisplay'
 import TrackVisualization from '../components/trackVisualization'
 import Speedometer from '../components/speedometer'
 import './TypeRacerPage.css'
+import FinishedUI from '../ui/finishedTyping'
 
 const TypeRacerPage: React.FC = () => {
   const [wordsTypedCorrectly, setWordsTypedCorrectly] = useState(0)
@@ -83,34 +84,32 @@ const TypeRacerPage: React.FC = () => {
 
   return (
     <div className="type-racer-page">
-      <h1>Type Racer</h1>
-      <Speedometer speed={typingSpeed} />
-      <WordDisplay
-        onWordTyped={handleWordTyped}
-        onGameStart={handleGameStart}
-        isGameStarted={isGameStarted}
-        isGameFinished={isGameFinished}
-        onGameFinish={handleGameFinish}
-        currentSpeed={typingSpeed}
-      />
-      <TrackVisualization progress={progress} />
-      <div className="stats">
-        {isGameStarted && !isGameFinished && (
-          <p>
-            Time: {minutes}:{seconds.padStart(5, '0')} | Speed: {typingSpeed.toFixed(0)} WPM
-          </p>
-        )}
-        {isGameFinished && (
-          <>
-            <p>
-              Time taken: {minutes}:{seconds.padStart(5, '0')} | Final Speed: {typingSpeed.toFixed(0)} WPM
-            </p>
-            <button onClick={restartGame} className="restart-button">
-              Restart
-            </button>
-          </>
-        )}
-      </div>
+      {!isGameFinished ? (
+        // Game UI
+        <>
+          <h1>Type Racer</h1>
+          <Speedometer speed={typingSpeed} />
+          <WordDisplay
+            onWordTyped={handleWordTyped}
+            onGameStart={handleGameStart}
+            isGameStarted={isGameStarted}
+            isGameFinished={isGameFinished}
+            onGameFinish={handleGameFinish}
+            currentSpeed={typingSpeed}
+          />
+          <TrackVisualization progress={progress} />
+          <div className="stats">
+            {isGameStarted && !isGameFinished && (
+              <p>
+                Time: {minutes}:{seconds.padStart(5, '0')} | Speed: {typingSpeed.toFixed(0)} WPM
+              </p>
+            )}
+          </div>
+        </>
+      ) : (
+        // Finished UI
+        <FinishedUI time={elapsedTime} typingSpeed={typingSpeed} onRestart={restartGame} />
+      )}
     </div>
   )
 }

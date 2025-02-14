@@ -6,6 +6,8 @@ import { StellarWalletsKit, WalletNetwork, WalletType } from 'stellar-wallets-ki
 import type { ISupportedWallet } from 'stellar-wallets-kit'
 import { GoogleLogin } from '@react-oauth/google'
 import { jwtDecode } from 'jwt-decode'
+import { useSearchParams } from 'react-router-dom'
+import './FinishedUI.css'
 
 interface LeaderboardEntry {
   rank: number
@@ -17,7 +19,6 @@ interface GoogleJWTPayload {
   email: string
   name: string
   picture: string
-  [key: string]: any
 }
 
 const kit: StellarWalletsKit = new StellarWalletsKit({
@@ -38,13 +39,11 @@ interface FinishedUIProps {
   time: number
   typingSpeed: number
   onRestart: () => void
-  tournamentId: string
 }
 
-export const FinishedUI: React.FC<FinishedUIProps> = ({ time, typingSpeed, onRestart, tournamentId }) => {
+export const FinishedUI: React.FC<FinishedUIProps> = ({ time, typingSpeed, onRestart }) => {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([])
-  const [isLoadingLeaderboard, setIsLoadingLeaderboard] = useState(false)
   const [publicKey, setPublicKey] = useState('Wallet not Connected...')
   const [loading, setLoading] = useState(false)
   const [showWallets, setShowWallets] = useState(false)
@@ -54,18 +53,16 @@ export const FinishedUI: React.FC<FinishedUIProps> = ({ time, typingSpeed, onRes
   const [userName, setUserName] = useState('')
   const [userAvatar, setUserAvatar] = useState('')
   const [scoreSubmitted, setScoreSubmitted] = useState(false)
-
+  const [searchParams] = useSearchParams()
+  const tournamentId = searchParams.get('tourId')
   const fetchLeaderboardData = async () => {
-    setIsLoadingLeaderboard(true)
     try {
-      const data = await fetchLeaderboard(tournamentId)
+      const data = await fetchLeaderboard(tournamentId as string)
       setLeaderboard(data)
       toast.success('Leaderboard updated!')
     } catch (error) {
       console.error('Error fetching leaderboard:', error)
       toast.error('Failed to fetch leaderboard')
-    } finally {
-      setIsLoadingLeaderboard(false)
     }
   }
 
@@ -117,18 +114,19 @@ export const FinishedUI: React.FC<FinishedUIProps> = ({ time, typingSpeed, onRes
   }
 
   const handleSubmitScore = async () => {
-    if (!isAuthenticated) {
-      toast.error('Please sign in with Google first')
+    console.log('Submitting score...')
+    if (!isAuthenticated && publicKey === 'Wallet not Connected...') {
+      toast.error('Please sign in with Google or connect your wallet first')
       return
     }
-    if (publicKey === 'Wallet not Connected...') {
-      toast.error('Please connect your wallet first')
-      return
-    }
-
     setIsSubmitting(true)
     try {
-      await updateParticipantScoreEmail(tournamentId, userEmail, typingSpeed)
+      if (isAuthenticated) {
+        console.log('Submitting score...')
+        await updateParticipantScoreEmail(tournamentId as string, userEmail, typingSpeed)
+      } else {
+        await updateParticipantScoreEmail(tournamentId as string, publicKey, typingSpeed)
+      }
       setScoreSubmitted(true)
       toast.success('Score submitted successfully!')
       fetchLeaderboardData()
@@ -209,39 +207,29 @@ export const FinishedUI: React.FC<FinishedUIProps> = ({ time, typingSpeed, onRes
       <div className="leaderboard-section mb-8">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-semibold text-white">Leaderboard</h2>
-          <button
-            onClick={fetchLeaderboardData}
-            disabled={isLoadingLeaderboard}
-            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50 transition-colors"
-          >
-            {isLoadingLeaderboard ? 'Refreshing...' : 'Refresh'}
-          </button>
+          <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors">Refresh</button>
         </div>
 
-        {leaderboard.length > 0 ? (
-          <div className="bg-neutral-800 rounded-lg overflow-hidden">
-            <table className="w-full">
-              <thead className="bg-neutral-700">
-                <tr>
-                  <th className="px-4 py-2 text-left text-gray-300">Rank</th>
-                  <th className="px-4 py-2 text-left text-gray-300">Name</th>
-                  <th className="px-4 py-2 text-left text-gray-300">Score</th>
+        <div className="bg-neutral-800 rounded-lg overflow-hidden">
+          <table className="w-full">
+            <thead className="bg-neutral-700">
+              <tr>
+                <th className="px-4 py-2 text-left text-gray-300">Rank</th>
+                <th className="px-4 py-2 text-left text-gray-300">Name</th>
+                <th className="px-4 py-2 text-left text-gray-300">Score</th>
+              </tr>
+            </thead>
+            <tbody>
+              {leaderboard.map((entry) => (
+                <tr key={entry.rank} className="border-t border-neutral-600 hover:bg-neutral-700 transition-colors">
+                  <td className="px-4 py-2 text-gray-300">#{entry.rank}</td>
+                  <td className="px-4 py-2 text-gray-300">{entry.name}</td>
+                  <td className="px-4 py-2 text-gray-300">{entry.score} WPM</td>
                 </tr>
-              </thead>
-              <tbody>
-                {leaderboard.map((entry) => (
-                  <tr key={entry.rank} className="border-t border-neutral-600 hover:bg-neutral-700 transition-colors">
-                    <td className="px-4 py-2 text-gray-300">#{entry.rank}</td>
-                    <td className="px-4 py-2 text-gray-300">{entry.name}</td>
-                    <td className="px-4 py-2 text-gray-300">{entry.score} WPM</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        ) : (
-          <div className="text-center py-8 text-gray-400 bg-neutral-800 rounded-lg">No scores available yet</div>
-        )}
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       {/* Action Buttons */}
@@ -249,7 +237,7 @@ export const FinishedUI: React.FC<FinishedUIProps> = ({ time, typingSpeed, onRes
         {!scoreSubmitted && (
           <button
             onClick={handleSubmitScore}
-            disabled={isSubmitting || !isAuthenticated || publicKey === 'Wallet not Connected...'}
+            disabled={isSubmitting}
             className="w-full py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 transition-colors"
           >
             {isSubmitting ? 'Submitting...' : 'Submit Score'}

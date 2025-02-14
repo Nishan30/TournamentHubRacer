@@ -1,0 +1,164 @@
+/* FinishedUI.css */
+.finished-ui {
+    animation: fadeIn 0.3s ease-in-out;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .stat-box {
+    transition: transform 0.2s ease-in-out;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .stat-box:hover {
+    transform: translateY(-2px);
+  }
+  
+  .wallet-button {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+  }
+  
+  .wallet-button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+  
+  .wallet-button:active {
+    transform: translateY(1px);
+  }
+  
+  .wallet-options {
+    animation: slideDown 0.2s ease-out;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  }
+  
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .wallet-option {
+    transition: background-color 0.2s ease;
+  }
+  
+  .leaderboard-section table {
+    border-collapse: separate;
+    border-spacing: 0;
+    width: 100%;
+  }
+  
+  .leaderboard-section th {
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.875rem;
+    letter-spacing: 0.05em;
+  }
+  
+  .leaderboard-section tr {
+    transition: background-color 0.2s ease;
+  }
+  
+  .leaderboard-section tbody tr:first-child {
+    background-color: rgba(59, 130, 246, 0.1);
+  }
+  
+  .leaderboard-section tbody tr:first-child td {
+    color: #60a5fa;
+    font-weight: 600;
+  }
+  
+  .action-buttons button {
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .action-buttons button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+  
+  .action-buttons button:active {
+    transform: translateY(1px);
+  }
+  
+  .user-info {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 0.5rem 1rem;
+    border-radius: 9999px;
+    transition: all 0.2s ease;
+  }
+  
+  .user-info:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+  
+  .user-info img {
+    border: 2px solid rgba(255, 255, 255, 0.2);
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 640px) {
+    .finished-ui {
+      padding: 1rem;
+      margin: 0.5rem;
+    }
+  
+    .stats {
+      grid-template-columns: 1fr;
+    }
+  
+    .leaderboard-section th,
+    .leaderboard-section td {
+      padding: 0.5rem;
+      font-size: 0.875rem;
+    }
+  }
+  
+  /* Loading states */
+  .wallet-button:disabled,
+  .action-buttons button:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+  }
+  
+  /* Custom scrollbar for wallet options */
+  .wallet-options {
+    max-height: 200px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+  }
+  
+  .wallet-options::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  .wallet-options::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  .wallet-options::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+  }
