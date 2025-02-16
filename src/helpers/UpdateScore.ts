@@ -1,4 +1,4 @@
-const BASE_URL = 'https://www.tournamenthub.xyz'
+const BASE_URL = 'http://3.145.217.76'
 
 export const updateParticipantScoreEmail = async (tournamentId: string, email: string, score: number): Promise<any> => {
   try {
