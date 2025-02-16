@@ -139,7 +139,7 @@ export const FinishedUI: React.FC<FinishedUIProps> = ({ time, typingSpeed, onRes
   }
 
   return (
-    <div className="finished-ui bg-neutral-900 p-8 rounded-lg max-w-2xl mx-auto">
+    <div className="finished-ui bg-neutral-900 p-8 rounded-lg">
       {/* Results Header */}
       <div className="result-header text-center mb-8">
         <h1 className="text-3xl font-bold text-white mb-4">Well Done! 🎉</h1>
@@ -205,9 +205,11 @@ export const FinishedUI: React.FC<FinishedUIProps> = ({ time, typingSpeed, onRes
 
       {/* Leaderboard Section */}
       <div className="leaderboard-section mb-8">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-semibold text-white">Leaderboard</h2>
-          <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors">Refresh</button>
+        <div className="leaderboard-header">
+          <h2>Leaderboard</h2>
+          <button className="refresh-button" onClick={fetchLeaderboardData}>
+            Refresh
+          </button>
         </div>
 
         <div className="bg-neutral-800 rounded-lg overflow-hidden">

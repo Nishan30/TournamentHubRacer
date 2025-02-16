@@ -1,3 +1,22 @@
+* {
+    box-sizing: border-box;
+  }
+  
+  html,
+  body,
+  #root {
+    width: 100vw;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+  }
+  
+  body {
+    background: #101010;
+    color: white;
+    font-family: 'Inter var', sans-serif;
+  }
+
 .type-racer-page {
     display: flex;
     flex-direction: column;
@@ -53,3 +72,13 @@
 .restart-button:active {
     transform: translateY(0);
 }
+
+.finished-ui-typeracer{
+    margin: 20px;
+    display: flex;
+    flex-direction: column;
+    padding: 20px 10px;
+    color: white;
+}
+
+

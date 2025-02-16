@@ -83,32 +83,36 @@ const TypeRacerPage: React.FC = () => {
   const seconds = ((elapsedTime % 60000) / 1000).toFixed(2)
 
   return (
-    <div className="type-racer-page">
+    <div>
       {!isGameFinished ? (
         // Game UI
         <>
-          <h1>Type Racer</h1>
-          <Speedometer speed={typingSpeed} />
-          <WordDisplay
-            onWordTyped={handleWordTyped}
-            onGameStart={handleGameStart}
-            isGameStarted={isGameStarted}
-            isGameFinished={isGameFinished}
-            onGameFinish={handleGameFinish}
-            currentSpeed={typingSpeed}
-          />
-          <TrackVisualization progress={progress} />
-          <div className="stats">
-            {isGameStarted && !isGameFinished && (
-              <p>
-                Time: {minutes}:{seconds.padStart(5, '0')} | Speed: {typingSpeed.toFixed(0)} WPM
-              </p>
-            )}
+          <div className="type-racer-page">
+            <h1>Type Racer</h1>
+            <Speedometer speed={typingSpeed} />
+            <WordDisplay
+              onWordTyped={handleWordTyped}
+              onGameStart={handleGameStart}
+              isGameStarted={isGameStarted}
+              isGameFinished={isGameFinished}
+              onGameFinish={handleGameFinish}
+              currentSpeed={typingSpeed}
+            />
+            <TrackVisualization progress={progress} />
+            <div className="stats">
+              {isGameStarted && !isGameFinished && (
+                <p>
+                  Time: {minutes}:{seconds.padStart(5, '0')} | Speed: {typingSpeed.toFixed(0)} WPM
+                </p>
+              )}
+            </div>
           </div>
         </>
       ) : (
         // Finished UI
-        <FinishedUI time={elapsedTime} typingSpeed={typingSpeed} onRestart={restartGame} />
+        <div className="finished-ui-typeracer">
+          <FinishedUI time={elapsedTime} typingSpeed={typingSpeed} onRestart={restartGame} />
+        </div>
       )}
     </div>
   )

@@ -1,164 +1,266 @@
 /* FinishedUI.css */
 .finished-ui {
-    animation: fadeIn 0.3s ease-in-out;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-    backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 2.5rem;
+  background: linear-gradient(145deg, #1a1a1a, #2a2a2a);
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  animation: fadeIn 0.4s ease-out;
+}
+
+/* Results Header Section */
+.result-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.result-header h1 {
+  font-size: 2.5rem;
+  background: linear-gradient(135deg, #60a5fa, #8b5cf6);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin-bottom: 2rem;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  margin: 0 auto;
+  max-width: 500px;
+}
+
+.stat-box {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 1.5rem;
+  border-radius: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+}
+
+.stat-box:hover {
+  transform: translateY(-5px);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.stat-box p:first-child {
+  font-size: 0.9rem;
+  color: #94a3b8;
+  margin-bottom: 0.5rem;
+}
+
+.stat-box p:last-child {
+  font-size: 2.5rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #60a5fa, #8b5cf6);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Authentication Section */
+.auth-section {
+  background: rgba(255, 255, 255, 0.03);
+  padding: 2rem;
+  border-radius: 15px;
+  margin-bottom: 2rem;
+}
+
+.google-auth-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.google-auth-container p {
+  color: #94a3b8;
+  font-size: 0.95rem;
+}
+
+/* Custom styling for Google Sign-In button wrapper */
+.google-auth-container > div {
+  position: relative;
+  width: fit-content;
+  padding: 4px;
+  background: linear-gradient(135deg, #60a5fa, #8b5cf6);
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.google-auth-container > div:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(96, 165, 250, 0.2);
+}
+
+/* Refresh Button */
+.refresh-button {
+  background: linear-gradient(135deg, #3b82f6, #60a5fa);
+  color: white;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.refresh-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(59, 130, 246, 0.3);
+}
+
+.refresh-button:active {
+  transform: translateY(0);
+}
+
+/* Add refresh icon */
+.refresh-button::before {
+  content: '↻';
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+
+.leaderboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding: 0 0.5rem;
+}
+
+.leaderboard-header h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  background: linear-gradient(135deg, #60a5fa, #8b5cf6);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 1.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 99px;
+  margin-bottom: 1.5rem;
+}
+
+.user-info img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid #60a5fa;
+}
+
+/* Wallet Section */
+.wallet-button {
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+  padding: 1rem;
+  border-radius: 12px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.wallet-options {
+  margin-top: 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 0.5rem;
+}
+
+.wallet-option {
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+/* Leaderboard Section */
+.leaderboard-section {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 15px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.leaderboard-section table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 0.5rem;
+}
+
+.leaderboard-section th {
+  padding: 1rem;
+  text-align: left;
+  color: #94a3b8;
+  font-weight: 500;
+}
+
+.leaderboard-section td {
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.leaderboard-section tr:first-child td {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1));
+  color: #fff;
+  font-weight: 600;
+}
+
+/* Action Buttons */
+.action-buttons {
+  display: grid;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.action-buttons button {
+  padding: 1rem;
+  border-radius: 12px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.action-buttons button:first-child {
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+}
+
+.action-buttons button:last-child {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .finished-ui {
+    margin: 1rem;
+    padding: 1.5rem;
   }
-  
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(10px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+
+  .stats {
+    grid-template-columns: 1fr;
   }
-  
-  .stat-box {
-    transition: transform 0.2s ease-in-out;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+
+  .stat-box p:last-child {
+    font-size: 2rem;
   }
-  
-  .stat-box:hover {
-    transform: translateY(-2px);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
   }
-  
-  .wallet-button {
-    position: relative;
-    overflow: hidden;
-    transition: all 0.3s ease;
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
-  
-  .wallet-button:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  }
-  
-  .wallet-button:active {
-    transform: translateY(1px);
-  }
-  
-  .wallet-options {
-    animation: slideDown 0.2s ease-out;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
-  }
-  
-  @keyframes slideDown {
-    from {
-      opacity: 0;
-      transform: translateY(-10px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  
-  .wallet-option {
-    transition: background-color 0.2s ease;
-  }
-  
-  .leaderboard-section table {
-    border-collapse: separate;
-    border-spacing: 0;
-    width: 100%;
-  }
-  
-  .leaderboard-section th {
-    font-weight: 600;
-    text-transform: uppercase;
-    font-size: 0.875rem;
-    letter-spacing: 0.05em;
-  }
-  
-  .leaderboard-section tr {
-    transition: background-color 0.2s ease;
-  }
-  
-  .leaderboard-section tbody tr:first-child {
-    background-color: rgba(59, 130, 246, 0.1);
-  }
-  
-  .leaderboard-section tbody tr:first-child td {
-    color: #60a5fa;
-    font-weight: 600;
-  }
-  
-  .action-buttons button {
-    transition: all 0.2s ease;
-    position: relative;
-    overflow: hidden;
-  }
-  
-  .action-buttons button:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  }
-  
-  .action-buttons button:active {
-    transform: translateY(1px);
-  }
-  
-  .user-info {
-    background: rgba(255, 255, 255, 0.05);
-    padding: 0.5rem 1rem;
-    border-radius: 9999px;
-    transition: all 0.2s ease;
-  }
-  
-  .user-info:hover {
-    background: rgba(255, 255, 255, 0.1);
-  }
-  
-  .user-info img {
-    border: 2px solid rgba(255, 255, 255, 0.2);
-  }
-  
-  /* Responsive adjustments */
-  @media (max-width: 640px) {
-    .finished-ui {
-      padding: 1rem;
-      margin: 0.5rem;
-    }
-  
-    .stats {
-      grid-template-columns: 1fr;
-    }
-  
-    .leaderboard-section th,
-    .leaderboard-section td {
-      padding: 0.5rem;
-      font-size: 0.875rem;
-    }
-  }
-  
-  /* Loading states */
-  .wallet-button:disabled,
-  .action-buttons button:disabled {
-    cursor: not-allowed;
-    opacity: 0.7;
-  }
-  
-  /* Custom scrollbar for wallet options */
-  .wallet-options {
-    max-height: 200px;
-    overflow-y: auto;
-    scrollbar-width: thin;
-    scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
-  }
-  
-  .wallet-options::-webkit-scrollbar {
-    width: 6px;
-  }
-  
-  .wallet-options::-webkit-scrollbar-track {
-    background: transparent;
-  }
-  
-  .wallet-options::-webkit-scrollbar-thumb {
-    background-color: rgba(255, 255, 255, 0.2);
-    border-radius: 3px;
-  }
+}
