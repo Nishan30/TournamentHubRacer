@@ -5,42 +5,39 @@ import './WordDisplay.css'
 
 interface WordDisplayProps {
   onWordTyped: (correct: boolean) => void
-  onGameStart: () => void
   isGameStarted: boolean
   isGameFinished: boolean
   onGameFinish: () => void
   currentSpeed: number
 }
 
-const WordDisplay: React.FC<WordDisplayProps> = ({ onWordTyped, onGameStart, isGameStarted, isGameFinished, onGameFinish }) => {
+const WordDisplay: React.FC<WordDisplayProps> = ({ onWordTyped, isGameStarted, isGameFinished, onGameFinish }) => {
   const [words, setWords] = useState<string[]>([])
   const [currentWordIndex, setCurrentWordIndex] = useState<number>(0)
   const [typedWord, setTypedWord] = useState('')
   const [letterStatus, setLetterStatus] = useState<('correct' | 'incorrect' | 'pending')[]>([])
-  const inputRef = useRef<HTMLInputElement>(null)
-  const [wordAnimation, setWordAnimation] = useState<'none' | 'fadeOut'>('none')
   const [displayedWords, setDisplayedWords] = useState<string[]>([])
+  const inputRef = useRef<HTMLInputElement>(null)
 
+  // Initialize words on component mount or game restart
   useEffect(() => {
     const shuffledWords = shuffleArray(wordList)
-    const pairs = []
-    for (let i = 0; i < 20; i += 2) {
-      pairs.push(`${shuffledWords[i]} ${shuffledWords[i + 1] || ''}`.trim())
-    }
-    setWords(pairs)
+    const selectedWords = shuffledWords.slice(0, 20)
+    setWords(selectedWords)
     setCurrentWordIndex(0)
     setTypedWord('')
     setLetterStatus([])
-    setDisplayedWords(pairs.slice(0, 3))
-    setWordAnimation('none')
+    setDisplayedWords(selectedWords.slice(0, 3))
   }, [isGameFinished])
 
+  // Focus input when game starts
   useEffect(() => {
     if (isGameStarted && inputRef.current) {
       inputRef.current.focus()
     }
   }, [isGameStarted])
 
+  // Update letter status as user types
   useEffect(() => {
     if (!isGameStarted) return
 
@@ -57,34 +54,34 @@ const WordDisplay: React.FC<WordDisplayProps> = ({ onWordTyped, onGameStart, isG
   }, [typedWord, currentWordIndex, words, isGameStarted])
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (!isGameStarted) {
-      onGameStart()
-    }
+    if (!isGameStarted) return
+
     const value = event.target.value
     setTypedWord(value)
 
-    if (value.trim() === words[currentWordIndex]) {
+    const currentWord = words[currentWordIndex]
+    if (value.trim() === currentWord) {
       onWordTyped(true)
-      setWordAnimation('fadeOut')
-      setTimeout(() => {
-        if (currentWordIndex < words.length - 1) {
-          setCurrentWordIndex(currentWordIndex + 1)
-          setTypedWord('')
-          setLetterStatus([])
-          setDisplayedWords(words.slice(currentWordIndex + 1, currentWordIndex + 4))
-          setWordAnimation('none')
-        } else {
-          onGameFinish()
+
+      const nextIndex = currentWordIndex + 1
+      if (nextIndex < words.length) {
+        setCurrentWordIndex(nextIndex)
+        setTypedWord('')
+        setLetterStatus([])
+        setDisplayedWords(words.slice(nextIndex, nextIndex + 3))
+
+        if (inputRef.current) {
+          inputRef.current.focus()
         }
-      }, 300)
+      } else {
+        onGameFinish()
+      }
     }
   }
 
   const getLetterClassName = (index: number): string => {
     return letterStatus[index] || 'pending'
   }
-
-  const currentWord = words[currentWordIndex] || ''
 
   if (isGameFinished) {
     return (
@@ -96,23 +93,21 @@ const WordDisplay: React.FC<WordDisplayProps> = ({ onWordTyped, onGameStart, isG
 
   return (
     <div className="word-display">
-      {!isGameStarted && <p className="instruction">Start typing to begin!</p>}
+      {!isGameStarted && <p className="instruction">Get ready to type!</p>}
       <div className="word-container">
-        {displayedWords.map((wordPair, index) => {
-          const wordIndex = currentWordIndex + index
-          const isCurrent = wordIndex === currentWordIndex
-          const isCompleted = wordIndex < currentWordIndex
-          const animatedClass = isCurrent && wordAnimation === 'fadeOut' ? 'word-fade-out' : ''
+        {displayedWords.map((word, index) => {
+          const isCurrent = index === 0
+          const isCompleted = currentWordIndex > index
 
           return (
-            <span key={index} className={`word ${isCurrent ? 'current' : isCompleted ? 'completed' : 'upcoming'} ${animatedClass}`}>
+            <span key={currentWordIndex + index} className={`word ${isCurrent ? 'current' : isCompleted ? 'completed' : 'upcoming'}`}>
               {isCurrent
-                ? currentWord.split('').map((letter, letterIndex) => (
+                ? word.split('').map((letter, letterIndex) => (
                     <span key={letterIndex} className={`letter ${getLetterClassName(letterIndex)}`}>
-                      {letter === ' ' ? '\u00A0' : letter} {/* Preserve space using non-breaking space */}
+                      {letter}
                     </span>
                   ))
-                : wordPair + ' '}
+                : word}
             </span>
           )
         })}
@@ -123,8 +118,8 @@ const WordDisplay: React.FC<WordDisplayProps> = ({ onWordTyped, onGameStart, isG
         onChange={handleInputChange}
         className="input-field"
         ref={inputRef}
-        disabled={isGameFinished}
-        placeholder="Type here..."
+        disabled={!isGameStarted || isGameFinished}
+        placeholder={isGameStarted ? 'Type here...' : 'Waiting for countdown...'}
       />
     </div>
   )

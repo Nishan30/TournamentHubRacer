@@ -56,6 +56,7 @@ export const FinishedUI: React.FC<FinishedUIProps> = ({ time, typingSpeed, onRes
   const [searchParams] = useSearchParams()
   const tournamentId = searchParams.get('tourId')
   const fetchLeaderboardData = async () => {
+    console.log('Fetching leaderboard...')
     try {
       const data = await fetchLeaderboard(tournamentId as string)
       setLeaderboard(data)
@@ -120,12 +121,12 @@ export const FinishedUI: React.FC<FinishedUIProps> = ({ time, typingSpeed, onRes
       return
     }
     setIsSubmitting(true)
+    const preciseNum = parseFloat(typingSpeed.toFixed(3))
     try {
       if (isAuthenticated) {
-        console.log('Submitting score...')
-        await updateParticipantScoreEmail(tournamentId as string, userEmail, typingSpeed)
+        await updateParticipantScoreEmail(tournamentId as string, userEmail, preciseNum)
       } else {
-        await updateParticipantScoreEmail(tournamentId as string, publicKey, typingSpeed)
+        await updateParticipantScoreEmail(tournamentId as string, publicKey, preciseNum)
       }
       setScoreSubmitted(true)
       toast.success('Score submitted successfully!')

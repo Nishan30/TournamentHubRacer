@@ -16,6 +16,17 @@
     letter-spacing: 0.1em;
     animation: pulse 2s infinite;
 }
+.time-display {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    margin-top: 0.5rem;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+  }
 
 @keyframes pulse {
     0% { opacity: 0.8; }

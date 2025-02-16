@@ -17,7 +17,7 @@
 
 .word-container {
     background: rgba(30, 41, 59, 0.7);
-    border-radius: 10px;
+    border-radius: 20px;
     padding: 5px;
     width: 80%;
     min-height: 100px;
@@ -68,13 +68,13 @@
 }
 
 .input-field {
-    margin-top: 10px;
-    padding: 5px 10px;
+    margin-top: 20px;
+    padding: 10px 10px;
     font-size: 1rem;
     font-family: 'Roboto Mono', monospace;
     background: rgba(30, 41, 59, 0.7);
     border: 2px solid rgba(255, 255, 255, 0.1);
-    border-radius: 10px;
+    border-radius: 20px;
     color: white;
     width: 100%;
     transition: all 0.3s ease;

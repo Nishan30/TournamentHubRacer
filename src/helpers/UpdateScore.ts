@@ -14,6 +14,8 @@ export const updateParticipantScoreEmail = async (tournamentId: string, email: s
       }),
     })
 
+    console.log('Response:', response)
+
     // Check for successful response
     if (!response.ok) {
       const errorData = await response.json()

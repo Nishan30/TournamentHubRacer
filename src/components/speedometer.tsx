@@ -3,9 +3,10 @@ import './Speedometer.css'
 
 interface SpeedometerProps {
   speed: number
+  time?: number // Add time prop
 }
 
-const Speedometer: React.FC<SpeedometerProps> = ({ speed }) => {
+const Speedometer: React.FC<SpeedometerProps> = ({ speed, time = 0 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
   const getSpeedCategory = (speed: number) => {
@@ -14,6 +15,13 @@ const Speedometer: React.FC<SpeedometerProps> = ({ speed }) => {
     if (speed > 40) return { label: 'GOOD', color: '#16a34a', glow: '#22c55e' }
     if (speed > 20) return { label: 'WARMING UP', color: '#ca8a04', glow: '#eab308' }
     return { label: 'ROOKIE', color: '#dc2626', glow: '#ef4444' }
+  }
+
+  // Format time function
+  const formatTime = (timeInMs: number) => {
+    const minutes = Math.floor(timeInMs / 60000)
+    const seconds = ((timeInMs % 60000) / 1000).toFixed(2)
+    return `${minutes}:${seconds.padStart(5, '0')}`
   }
 
   useEffect(() => {
@@ -83,6 +91,7 @@ const Speedometer: React.FC<SpeedometerProps> = ({ speed }) => {
       <div className="speed-category" style={{ color }}>
         {label}
       </div>
+      <div className="time-display">{formatTime(time)}</div>
     </div>
   )
 }
