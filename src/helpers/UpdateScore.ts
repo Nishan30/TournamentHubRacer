@@ -16,16 +16,21 @@ export const updateParticipantScoreEmail = async (tournamentId: string, email: s
 
     console.log('Response:', response)
 
-    // Check for successful response
+    // Handle 404 error explicitly
+    if (response.status === 404) {
+      return { error: 'Participant not found' }
+    }
+
+    // Check for other unsuccessful responses
     if (!response.ok) {
       const errorData = await response.json()
       throw new Error(errorData.message || 'Error updating score')
     }
 
     // Return response JSON if successful
-    const responseData = await response.json()
-    return responseData
+    return await response.json()
   } catch (error) {
+    console.error('Error:', error)
     throw new Error('Internal Server Error')
   }
 }

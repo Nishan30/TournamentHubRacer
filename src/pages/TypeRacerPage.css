@@ -21,7 +21,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 20px 10px;
+    padding: 10px 10px;
     min-height: 100vh;
     color: white;
 }
@@ -29,7 +29,7 @@
 .type-racer-page h1 {
     font-size: 2rem;
     font-weight: bold;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     background: linear-gradient(to right, #3b82f6, #8b5cf6);
     -webkit-background-clip: text;
     background-clip: text;
@@ -50,7 +50,7 @@
 }
 
 .restart-button {
-    margin-top: 15px;
+    margin-top: 10px;
     padding: 5px 10px;
     font-size: 1.1rem;
     font-weight: 600;
@@ -74,7 +74,7 @@
 }
 
 .finished-ui-typeracer{
-    margin: 20px;
+    margin: 10px;
     display: flex;
     flex-direction: column;
     padding: 20px 10px;

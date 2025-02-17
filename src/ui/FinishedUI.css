@@ -183,6 +183,34 @@
   transition: all 0.2s ease;
 }
 
+.tournament-join-button {
+  width: 100%;
+  margin-top: 1rem;
+  padding: 1rem;
+  background: linear-gradient(135deg, #2563eb, #4f46e5);
+  color: white;
+  border-radius: 12px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.tournament-join-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(37, 99, 235, 0.3);
+}
+
+.tournament-join-button svg {
+  width: 20px;
+  height: 20px;
+}
+
+
 /* Leaderboard Section */
 .leaderboard-section {
   background: rgba(255, 255, 255, 0.03);

@@ -1,13 +1,14 @@
 // components/FinishedUI.tsx
 import React, { useState, useEffect } from 'react'
 import { fetchLeaderboard, updateParticipantScoreEmail } from '../helpers/UpdateScore'
-import toast from 'react-hot-toast'
 import { StellarWalletsKit, WalletNetwork, WalletType } from 'stellar-wallets-kit'
 import type { ISupportedWallet } from 'stellar-wallets-kit'
 import { GoogleLogin } from '@react-oauth/google'
 import { jwtDecode } from 'jwt-decode'
 import { useSearchParams } from 'react-router-dom'
 import './FinishedUI.css'
+import toast from 'react-hot-toast'
+import 'react-toastify/dist/ReactToastify.css'
 
 interface LeaderboardEntry {
   rank: number
@@ -114,26 +115,42 @@ export const FinishedUI: React.FC<FinishedUIProps> = ({ time, typingSpeed, onRes
     }
   }
 
+  const [participantNotFound, setParticipantNotFound] = useState(false)
+
   const handleSubmitScore = async () => {
     console.log('Submitting score...')
+
     if (!isAuthenticated && publicKey === 'Wallet not Connected...') {
       toast.error('Please sign in with Google or connect your wallet first')
       return
     }
+
     setIsSubmitting(true)
+    setParticipantNotFound(false) // Reset state before new submission
+
     const preciseNum = parseFloat(typingSpeed.toFixed(3))
+
     try {
+      let response
+
       if (isAuthenticated) {
-        await updateParticipantScoreEmail(tournamentId as string, userEmail, preciseNum)
+        response = await updateParticipantScoreEmail(tournamentId as string, userEmail, preciseNum)
       } else {
-        await updateParticipantScoreEmail(tournamentId as string, publicKey, preciseNum)
+        response = await updateParticipantScoreEmail(tournamentId as string, publicKey, preciseNum)
       }
+      console.log('Score submission response:', response)
+
+      if (response?.error === 'Participant not found') {
+        toast.error('Participant not found! Please join the tournament.')
+        setParticipantNotFound(true)
+        return
+      }
+
       setScoreSubmitted(true)
       toast.success('Score submitted successfully!')
       fetchLeaderboardData()
-    } catch (error) {
+    } catch (error: any) {
       console.error('Score submission error:', error)
-      toast.error('Failed to submit score')
     } finally {
       setIsSubmitting(false)
     }
@@ -183,6 +200,23 @@ export const FinishedUI: React.FC<FinishedUIProps> = ({ time, typingSpeed, onRes
           >
             {loading ? 'Connecting...' : publicKey.startsWith('G') ? `Connected: ${publicKey.slice(0, 4)}...${publicKey.slice(-4)}` : 'Connect Wallet'}
           </button>
+          {participantNotFound && (
+            <button
+              onClick={() =>
+                window.open(`https://www.tournamenthub.xyz/dashboard/participant/tournaments/exploreTournament/traditional/${tournamentId}`, '_blank')
+              }
+              className="tournament-join-button"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                <path
+                  fillRule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z"
+                  clipRule="evenodd"
+                />
+              </svg>
+              Join Tournament
+            </button>
+          )}
 
           {showWallets && (
             <div className="wallet-options mt-2 bg-neutral-800 rounded p-2">

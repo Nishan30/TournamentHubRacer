@@ -5,10 +5,12 @@ import { Route, Routes } from 'react-router-dom'
 import TypeRacerPage from './pages/TypeRacerPage'
 import { HomePage } from './pages/HomePage'
 import { GoogleOAuthProvider } from '@react-oauth/google'
+import { Toaster } from 'react-hot-toast'
 
 createRoot(document.getElementById('root')!).render(
   <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID as string}>
     <BrowserRouter>
+      <Toaster position="top-right" />
       <Routes>
         <Route path="/" element={<HomePage />} /> {/* Updated */}
         <Route path="/car-racer" element={<App />} />
