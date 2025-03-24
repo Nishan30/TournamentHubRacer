@@ -1,5 +1,5 @@
 import React from 'react'
-import { Gamepad2, Trophy, Users, Rocket, MessageSquare, TrendingUp, Clock, Medal } from 'lucide-react'
+import { Gamepad2, Trophy, Users, Rocket, MessageSquare, TrendingUp, Clock, Medal, BirdIcon } from 'lucide-react'
 
 import './HomePage.css'
 
@@ -18,6 +18,14 @@ export const HomePage = (): JSX.Element => {
       description: 'Test your typing speed and accuracy',
       icon: <Clock className="w-8 h-8 text-green-500" />,
       path: '/type-racer',
+      players: '1.8k',
+      difficulty: 'Easy',
+    },
+    {
+      title: 'Flappy Bird',
+      description: 'Help the bird fly through the obstacles',
+      icon: <BirdIcon className="w-8 h-8 text-green-500" />,
+      path: '/flappy-bird',
       players: '1.8k',
       difficulty: 'Easy',
     },
