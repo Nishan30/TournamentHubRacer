@@ -1,4 +1,4 @@
-const BASE_URL = 'https://d2scueazoastsh.cloudfront.net'
+const BASE_URL = 'https://www.tournamenthub.xyz'
 
 export const updateParticipantScoreEmail = async (tournamentId: string, email: string, score: number): Promise<any> => {
   try {
