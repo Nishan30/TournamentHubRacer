@@ -1,5 +1,5 @@
 import React from 'react'
-import { Gamepad2, Trophy, Users, Rocket, MessageSquare, TrendingUp, Clock, Medal, BirdIcon } from 'lucide-react'
+import { Gamepad2, Trophy, Users, Rocket, MessageSquare, TrendingUp, Clock, Medal, BirdIcon, Brain } from 'lucide-react'
 
 import './HomePage.css'
 
@@ -26,8 +26,16 @@ export const HomePage = (): JSX.Element => {
       description: 'Help the bird fly through the obstacles',
       icon: <BirdIcon className="w-8 h-8 text-green-500" />,
       path: '/flappy-bird',
-      players: '1.8k',
+      players: '3.2k',
       difficulty: 'Easy',
+    },
+    {
+      title: 'Memory game',
+      description: 'Test your memory with this fun game',
+      icon: <Brain className="w-8 h-8 text-green-500" />,
+      path: '/memory-game',
+      players: '2.1k',
+      difficulty: 'Medium',
     },
   ]
 

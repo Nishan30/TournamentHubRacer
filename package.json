@@ -19,6 +19,7 @@
     "@stellar/stellar-sdk": "^13.1.0",
     "@supabase/supabase-js": "^1.30.4",
     "buffer": "^6.0.3",
+    "framer-motion": "^12.5.0",
     "inter-ui": "^3.19.3",
     "jwt-decode": "^4.0.0",
     "leva": "^0.9.21",
