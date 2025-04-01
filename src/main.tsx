@@ -8,6 +8,7 @@ import { GoogleOAuthProvider } from '@react-oauth/google'
 import { Toaster } from 'react-hot-toast'
 import FlappyBirdGame from './pages/flappyBird'
 import MemoryGame from './pages/Memory'
+import MathJump from './pages/MathJump'
 
 createRoot(document.getElementById('root')!).render(
   <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID as string}>
@@ -19,6 +20,7 @@ createRoot(document.getElementById('root')!).render(
         <Route path="/type-racer" element={<TypeRacerPage />} />
         <Route path="/flappy-bird" element={<FlappyBirdGame />} />
         <Route path="/memory-game" element={<MemoryGame />} />
+        <Route path="/math-jump" element={<MathJump />} />
       </Routes>
     </BrowserRouter>
     ,

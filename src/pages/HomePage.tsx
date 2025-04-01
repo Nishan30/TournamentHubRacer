@@ -1,5 +1,5 @@
 import React from 'react'
-import { Gamepad2, Trophy, Users, Rocket, MessageSquare, TrendingUp, Clock, Medal, BirdIcon, Brain } from 'lucide-react'
+import { Gamepad2, Trophy, Users, Rocket, MessageSquare, TrendingUp, Clock, Medal, BirdIcon, Brain, PlusSquare, Plus } from 'lucide-react'
 
 import './HomePage.css'
 
@@ -37,6 +37,14 @@ export const HomePage = (): JSX.Element => {
       players: '2.1k',
       difficulty: 'Medium',
     },
+    {
+      title: 'Math Jump',
+      description: 'Jump and solve math problems to progress',
+      icon: <PlusSquare className="w-8 h-8 text-green-500" />,
+      path: '/math-jump',
+      players: '1.1k',
+      difficulty: 'Medium',
+    }
   ]
 
   const tournamentHubUrl = 'https://www.tournamenthub.xyz' // Replace with actual URL
