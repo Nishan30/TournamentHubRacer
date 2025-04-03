@@ -1,32 +1,46 @@
-import { useRef, useEffect } from 'react';
-import { useGameCanvas } from '../components/mathJump/useGameCanvas';
-import './MathJump.css';
+import { useRef, useEffect } from 'react'
+import { useGameCanvas } from '../components/mathJump/useGameCanvas'
+import './MathJump.css'
 
 export default function MathJump() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const { startGame, handleClick } = useGameCanvas(canvasRef);
+  const canvasRef = useRef<HTMLCanvasElement>(null)
+  const { startGame, handleClick } = useGameCanvas(canvasRef)
 
   useEffect(() => {
     if (canvasRef.current) {
-      const cleanup = startGame();
+      const cleanup = startGame()
       return () => {
-        if (cleanup) cleanup();
-      };
+        if (cleanup) cleanup()
+      }
     }
-  }, [startGame]);
+  }, [startGame])
+
+  // Prevent scrolling when space bar is pressed
+  useEffect(() => {
+    const preventScroll = (e: KeyboardEvent) => {
+      if (e.code === 'Space') {
+        e.preventDefault()
+      }
+    }
+    window.addEventListener('keydown', preventScroll)
+    return () => {
+      window.removeEventListener('keydown', preventScroll)
+    }
+  }, [])
 
   return (
-    <div className="h-screen bg-gradient-to-b from-indigo-900 to-black flex items-center justify-center p-4">
-      <div className="flex w-full max-w-6xl h-[90%]">
-        <div className="flex-1 flex items-center justify-center">
+    <div className="min-h-screen bg-gradient-to-b from-indigo-900 to-black flex items-center justify-center p-4">
+      <div className="flex flex-row items-center justify-between gap-8 max-w-6xl w-full">
+        <div className="flex flex-col items-center w-2/3">
+          <h1 className="text-4xl font-bold text-white mb-8 animate-pulse text-center">Endless Runner</h1>
           <canvas
             ref={canvasRef}
-            className="w-full max-w-[800px] h-full max-h-[600px] rounded-lg shadow-2xl border-4 border-indigo-600"
+            className="w-full h-[600px] rounded-lg shadow-2xl border-4 border-indigo-600"
             onClick={handleClick}
             style={{ cursor: 'pointer' }}
           />
         </div>
-        <div className="ml-8 bg-black bg-opacity-50 p-6 rounded-lg text-white text-center w-80 h-full flex flex-col justify-center">
+        <div className="bg-black bg-opacity-50 p-6 rounded-lg text-white text-center w-1/3">
           <h2 className="text-2xl font-bold mb-4">Controls</h2>
           <div className="grid grid-cols-1 gap-6">
             <div>
@@ -43,5 +57,5 @@ export default function MathJump() {
         </div>
       </div>
     </div>
-  );
+  )
 }
