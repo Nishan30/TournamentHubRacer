@@ -6,6 +6,7 @@
     "extends": [
         "prettier",
         "plugin:react/recommended",
+        "plugin:react-hooks/recommended",
         "eslint:recommended"
     ],
     "overrides": [{
@@ -40,7 +41,8 @@
         "sourceType": "module"
     },
     "plugins": [
-        "react"
+        "react",
+        "react-hooks"
     ],
     "rules": {
         "eol-last": ["error", "always"],
