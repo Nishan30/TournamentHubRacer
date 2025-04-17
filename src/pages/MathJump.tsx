@@ -93,11 +93,11 @@ export default function MathJump() {
             </div>
           )}
           {/* Optional: Display score during gameplay */}
-          {!gameState.gameOver && (
+          {/* {!gameState.gameOver && (
             <div className="absolute top-3 left-3 bg-black bg-opacity-50 px-3 py-1 rounded z-5">
               <span className="text-white text-xl font-bold ">Score: {gameState.player.value}</span>
             </div>
-          )}
+          )} */}
         </div>
 
         {/* Controls and Info Section (Conditionally Rendered on the Side) - Takes less width */}

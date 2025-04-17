@@ -8,7 +8,7 @@ const PLAYER_SIZE = 40
 const GRAVITY = 0.8
 const JUMP_FORCE = -15
 const INITIAL_SPEED = 3.5
-const MAX_SPEED = 10
+const MAX_SPEED = 50
 const SCORE_THRESHOLD_FOR_SPEED_INCREASE = 400
 const MAX_OBSTACLES = 5
 const MIN_OBSTACLE_DISTANCE = 280
@@ -252,11 +252,11 @@ export const useGameCanvas = (canvasRef: React.RefObject<HTMLCanvasElement>) => 
       })
 
       // --- Score Display (Added for visibility) ---
-      ctx.fillStyle = COLOR_TEXT_LIGHT
-      ctx.font = 'bold 20px Arial'
-      ctx.textAlign = 'left'
-      ctx.textBaseline = 'top'
-      ctx.fillText(`Score: ${gameState.score}`, 10, 10)
+      // ctx.fillStyle = COLOR_TEXT_LIGHT
+      // ctx.font = 'bold 20px Arial'
+      // ctx.textAlign = 'left'
+      // ctx.textBaseline = 'top'
+      // ctx.fillText(`Score: ${gameState.score}`, 10, 10)
 
       // --- Game Over Screen ---
       if (gameState.gameOver) {
@@ -284,92 +284,204 @@ export const useGameCanvas = (canvasRef: React.RefObject<HTMLCanvasElement>) => 
 
   // --- Generate Obstacle Properties Function ---
   // Removed unused playerValue parameter from previous fix
-  const generateObstacleProperties = (): Omit<GameObject, 'x' | 'y' | 'id'> => {
-    const typeRoll = Math.random()
-    let type: ObstacleType = 'normal'
-    let value: number | undefined
-    let value2: number | undefined
-    let text: string | undefined
-    let width: number
-    let height: number
+  // --- Generate Obstacle Properties Function ---
+const generateObstacleProperties = (playerValue: number): Omit<GameObject, 'x' | 'y' | 'id'> => {
+  // --- Difficulty Scaling ---
+  // Normalize player value influence, capping its effect
+  // Example: influence scales from 0 to 1 as playerValue goes from 0 to 1000
+  const difficultyFactor = Math.min(1, Math.max(0, playerValue / 1000));
 
-    // 1. Determine type, values, and text first
-    if (typeRoll < 0.12) {
-      type = 'add'
-      value = Math.floor(Math.random() * 12) + 1
-      text = `+${value}`
-    } else if (typeRoll < 0.24) {
-      type = 'negative'
-      value = Math.floor(Math.random() * 12) + 1
-      text = `-${value}`
-    } else if (typeRoll < 0.36) {
-      type = 'multiply'
-      value = Math.floor(Math.random() * 4) + 2
-      text = `x${value}`
-    } else if (typeRoll < 0.48) {
-      type = 'divide'
-      value = Math.max(2, Math.floor(Math.random() * 5))
-      text = `/${value}`
-    } else if (typeRoll < 0.58) {
-      type = 'add_multiply'
-      value = Math.floor(Math.random() * 6) + 1
-      value2 = Math.floor(Math.random() * 3) + 2
-      text = `(+${value})*${value2}`
-    } else if (typeRoll < 0.68) {
-      type = 'subtract_multiply'
-      value = Math.floor(Math.random() * 6) + 1
-      value2 = Math.floor(Math.random() * 3) + 2
-      text = `(-${value})*${value2}`
-    } else if (typeRoll < 0.78) {
-      type = 'add_divide'
-      value = Math.floor(Math.random() * 10) + 1
-      value2 = Math.max(2, Math.floor(Math.random() * 4))
-      text = `(+${value})/${value2}`
-    } else if (typeRoll < 0.88) {
-      type = 'subtract_divide'
-      value = Math.floor(Math.random() * 10) + 1
-      value2 = Math.max(2, Math.floor(Math.random() * 4))
-      text = `(-${value})/${value2}`
-    } else if (typeRoll < 0.93) {
-      type = 'infinity'
-      text = '∞'
-    } else if (typeRoll < 0.98) {
-      type = 'sqrt-1'
-      text = 'i'
-    } else {
-      type = 'normal'
-      text = 'X'
-    }
+  // Define BASE probabilities (should sum roughly to 1)
+  const baseProbs = {
+      add: 0.12,
+      negative: 0.12,
+      multiply: 0.12,
+      divide: 0.12,
+      add_multiply: 0.10,
+      subtract_multiply: 0.10,
+      add_divide: 0.10,
+      subtract_divide: 0.10,
+      infinity: 0.04, // Fatal start low
+      sqrt1: 0.04,    // Fatal start low
+      normal: 0.04,   // Fatal start low
+  };
 
-    // 2. Determine dimensions based on type category
-    switch (
-      type // Determine dimensions
-    ) {
+  // Define how much probabilities SHIFT based on difficultyFactor
+  // Increase divides and fatals, decrease adds and multiplies
+  // Note: The total *change* should sum to 0 to maintain balance easily.
+  const shift = {
+      add: -0.05 * difficultyFactor,       // Decrease Add slightly
+      negative: 0,                         // Keep Subtract same
+      multiply: -0.07 * difficultyFactor,   // Decrease Multiply more
+      divide: +0.10 * difficultyFactor,     // Increase Divide significantly
+      add_multiply: -0.01 * difficultyFactor, // Slightly decrease complex
+      subtract_multiply: -0.01 * difficultyFactor,
+      add_divide: 0, // Keep complex divides same (they are already harder)
+      subtract_divide: 0,
+      infinity: +0.02 * difficultyFactor, // Increase Fatals
+      sqrt1: +0.01 * difficultyFactor,
+      normal: +0.01 * difficultyFactor,
+  };
+
+  // Calculate ADJUSTED probabilities
+  const adjProbs = {
+      add: Math.max(0.01, baseProbs.add + shift.add), // Ensure minimum probability
+      negative: Math.max(0.01, baseProbs.negative + shift.negative),
+      multiply: Math.max(0.01, baseProbs.multiply + shift.multiply),
+      divide: Math.max(0.01, baseProbs.divide + shift.divide),
+      add_multiply: Math.max(0.01, baseProbs.add_multiply + shift.add_multiply),
+      subtract_multiply: Math.max(0.01, baseProbs.subtract_multiply + shift.subtract_multiply),
+      add_divide: Math.max(0.01, baseProbs.add_divide + shift.add_divide),
+      subtract_divide: Math.max(0.01, baseProbs.subtract_divide + shift.subtract_divide),
+      infinity: Math.max(0.01, baseProbs.infinity + shift.infinity),
+      sqrt1: Math.max(0.01, baseProbs.sqrt1 + shift.sqrt1),
+      normal: Math.max(0.01, baseProbs.normal + shift.normal),
+  };
+
+  // NORMALIZE adjusted probabilities (so they sum to 1)
+  const totalAdjProb = Object.values(adjProbs).reduce((sum, p) => sum + p, 0);
+  const normProbs = {
+      add: adjProbs.add / totalAdjProb,
+      negative: adjProbs.negative / totalAdjProb,
+      multiply: adjProbs.multiply / totalAdjProb,
+      divide: adjProbs.divide / totalAdjProb,
+      add_multiply: adjProbs.add_multiply / totalAdjProb,
+      subtract_multiply: adjProbs.subtract_multiply / totalAdjProb,
+      add_divide: adjProbs.add_divide / totalAdjProb,
+      subtract_divide: adjProbs.subtract_divide / totalAdjProb,
+      infinity: adjProbs.infinity / totalAdjProb,
+      sqrt1: adjProbs.sqrt1 / totalAdjProb,
+      normal: adjProbs.normal / totalAdjProb,
+  };
+
+  // Calculate CUMULATIVE probabilities for selection
+  let cumulativeProb = 0;
+  const cumProbs = {
+      add: cumulativeProb += normProbs.add,
+      negative: cumulativeProb += normProbs.negative,
+      multiply: cumulativeProb += normProbs.multiply,
+      divide: cumulativeProb += normProbs.divide,
+      add_multiply: cumulativeProb += normProbs.add_multiply,
+      subtract_multiply: cumulativeProb += normProbs.subtract_multiply,
+      add_divide: cumulativeProb += normProbs.add_divide,
+      subtract_divide: cumulativeProb += normProbs.subtract_divide,
+      infinity: cumulativeProb += normProbs.infinity,
+      sqrt1: cumulativeProb += normProbs.sqrt1,
+      normal: cumulativeProb += normProbs.normal, // Should be very close to 1
+  };
+
+  // --- Select Obstacle Type based on Adjusted Probabilities ---
+  const typeRoll = Math.random();
+  let type: ObstacleType = 'normal'; // Default fallback
+
+  if (typeRoll < cumProbs.add) {
+      type = 'add';
+  } else if (typeRoll < cumProbs.negative) {
+      type = 'negative';
+  } else if (typeRoll < cumProbs.multiply) {
+      type = 'multiply';
+  } else if (typeRoll < cumProbs.divide) {
+      type = 'divide';
+  } else if (typeRoll < cumProbs.add_multiply) {
+      type = 'add_multiply';
+  } else if (typeRoll < cumProbs.subtract_multiply) {
+      type = 'subtract_multiply';
+  } else if (typeRoll < cumProbs.add_divide) {
+      type = 'add_divide';
+  } else if (typeRoll < cumProbs.subtract_divide) {
+      type = 'subtract_divide';
+  } else if (typeRoll < cumProbs.infinity) {
+      type = 'infinity';
+  } else if (typeRoll < cumProbs.sqrt1) {
+      type = 'sqrt-1';
+  } else { // The remaining probability space goes to 'normal'
+      type = 'normal';
+  }
+
+  // --- Generate Values, Text, Dimensions (largely unchanged) ---
+  let value: number | undefined;
+  let value2: number | undefined;
+  let text: string | undefined;
+  let width: number;
+  let height: number;
+
+  // Generate values/text based on the chosen type
+  switch (type) {
+      case 'add':
+          value = Math.floor(Math.random() * 12) + 1;
+          text = `+${value}`;
+          break;
+      case 'negative':
+          value = Math.floor(Math.random() * 12) + 1;
+          text = `-${value}`;
+          break;
+      case 'multiply':
+          // Maybe slightly reduce the multiplier range at higher scores? Optional.
+          value = Math.floor(Math.random() * (difficultyFactor > 0.5 ? 3 : 4)) + 2; // Max multiplier reduces slightly
+          text = `x${value}`;
+          break;
+      case 'divide':
+           // Ensure divisor is reasonable, potentially slightly larger at high scores
+          value = Math.max(2, Math.floor(Math.random() * (difficultyFactor > 0.5 ? 6 : 5)));
+          text = `/${value}`;
+          break;
+      case 'add_multiply':
+          value = Math.floor(Math.random() * 6) + 1;
+          value2 = Math.floor(Math.random() * 3) + 2;
+          text = `(+${value})*${value2}`;
+          break;
+      case 'subtract_multiply':
+          value = Math.floor(Math.random() * 6) + 1;
+          value2 = Math.floor(Math.random() * 3) + 2;
+          text = `(-${value})*${value2}`;
+          break;
+      case 'add_divide':
+          value = Math.floor(Math.random() * 10) + 1;
+          value2 = Math.max(2, Math.floor(Math.random() * 4));
+          text = `(+${value})/${value2}`;
+          break;
+      case 'subtract_divide':
+          value = Math.floor(Math.random() * 10) + 1;
+          value2 = Math.max(2, Math.floor(Math.random() * 4));
+          text = `(-${value})/${value2}`;
+          break;
+      case 'infinity':
+          text = '∞';
+          break;
+      case 'sqrt-1':
+          text = 'i';
+          break;
+      case 'normal':
+          text = 'X';
+          break;
+  }
+
+  // Determine dimensions based on type category (Unchanged)
+  switch (type) {
       case 'add_multiply':
       case 'subtract_multiply':
       case 'add_divide':
       case 'subtract_divide': {
-        width = RECT_OBSTACLE_WIDTH
-        height = RECT_OBSTACLE_HEIGHT
-        break
+          width = RECT_OBSTACLE_WIDTH;
+          height = RECT_OBSTACLE_HEIGHT;
+          break;
       }
-
-      default: {
-        const variation = Math.random() * DIMENSION_VARIATION * 2 - DIMENSION_VARIATION
-        width = SQUARE_OBSTACLE_SIZE + variation
-        height = SQUARE_OBSTACLE_SIZE + variation
-        width = Math.max(width, SQUARE_OBSTACLE_SIZE / 2)
-        height = Math.max(height, SQUARE_OBSTACLE_SIZE / 2)
-        break
+      default: { // Simple Add/Sub/Mul/Div and Fatal
+          const variation = Math.random() * DIMENSION_VARIATION * 2 - DIMENSION_VARIATION;
+          width = SQUARE_OBSTACLE_SIZE + variation;
+          height = SQUARE_OBSTACLE_SIZE + variation;
+          width = Math.max(width, SQUARE_OBSTACLE_SIZE / 2); // Prevent tiny obstacles
+          height = Math.max(height, SQUARE_OBSTACLE_SIZE / 2);
+          break;
       }
-    }
-
-    // 3. Get the category color (used for glow)
-    const color = getObstacleCategoryColor(type)
-
-    // 4. Return all properties including the calculated dimensions
-    return { width, height, type, value, value2, text, color }
   }
+
+  // Get the category color (used for glow)
+  const color = getObstacleCategoryColor(type);
+
+  // Return all properties including the calculated dimensions
+  return { width, height, type, value, value2, text, color };
+};
 
   // --- Update Function (Main Game Loop Logic) ---
   const update = useCallback(() => {
@@ -426,20 +538,65 @@ export const useGameCanvas = (canvasRef: React.RefObject<HTMLCanvasElement>) => 
 
         if (shouldStack && newState.obstacles.length <= MAX_OBSTACLES - 2) {
           // Stacked obstacles
-          const obs1Props = generateObstacleProperties()
-          let obs2Props = generateObstacleProperties()
-          // Prevent two fatal obstacles stacking
-          if (isFatalObstacle(obs1Props.type) && isFatalObstacle(obs2Props.type)) {
-            do {
-              obs2Props = generateObstacleProperties()
-            } while (isFatalObstacle(obs2Props.type))
+
+          // *** PASS player.value to generation ***
+          const obs1Props = generateObstacleProperties(newState.player.value);
+          let obs2Props = generateObstacleProperties(newState.player.value);
+
+          // --- START: Difficulty Stacking Logic ---
+          const highValueThreshold = 300; // When to start stacking fatal on divide
+          const forceFatalOnDivideChance = 0.6; // 60% chance if conditions met
+
+          if (
+            newState.player.value > highValueThreshold &&
+            obs1Props.type === 'divide' && // If bottom is divide
+            !isFatalObstacle(obs2Props.type) && // And top isn't already fatal
+            Math.random() < forceFatalOnDivideChance // And random chance hits
+          ) {
+             // Force the top obstacle to be 'i' or 'X'
+             const fatalTypeRoll = Math.random();
+             const newFatalType: ObstacleType = fatalTypeRoll < 0.5 ? 'sqrt-1' : 'normal';
+             const newFatalText = newFatalType === 'sqrt-1' ? 'i' : 'X';
+
+             // Regenerate properties for the fatal type
+             const variation = Math.random() * DIMENSION_VARIATION * 2 - DIMENSION_VARIATION;
+             let width = SQUARE_OBSTACLE_SIZE + variation;
+             let height = SQUARE_OBSTACLE_SIZE + variation;
+             width = Math.max(width, SQUARE_OBSTACLE_SIZE / 2);
+             height = Math.max(height, SQUARE_OBSTACLE_SIZE / 2);
+             const color = getObstacleCategoryColor(newFatalType);
+
+             // Overwrite obs2Props with the new fatal obstacle properties
+             obs2Props = {
+                 type: newFatalType,
+                 text: newFatalText,
+                 width,
+                 height,
+                 color,
+                 // value/value2 are undefined for fatal obstacles
+             };
+
+          } else {
+             // Original stacking rule: Prevent two fatal obstacles stacking (redundant if above logic used, but keep for safety)
+             if (isFatalObstacle(obs1Props.type) && isFatalObstacle(obs2Props.type)) {
+               do {
+                 // *** PASS player.value to regeneration ***
+                 obs2Props = generateObstacleProperties(newState.player.value);
+               } while (isFatalObstacle(obs2Props.type));
+             }
           }
+          // --- END: Difficulty Stacking Logic ---
+
+
           const y1 = CANVAS_HEIGHT - GROUND_HEIGHT - obs1Props.height
           const y2 = y1 - STACKED_OBSTACLE_VERTICAL_GAP - obs2Props.height
           newState.obstacles.push({ ...obs1Props, x: startX, y: y1, id: nextObstacleId++ })
+          // Ensure the potentially modified obs2Props is pushed
           newState.obstacles.push({ ...obs2Props, x: startX, y: y2, id: nextObstacleId++ })
+
         } else {
-          const obsProps = generateObstacleProperties()
+          // *** PASS player.value to generation ***
+          const obsProps = generateObstacleProperties(newState.player.value);
           let obstacleY = CANVAS_HEIGHT - GROUND_HEIGHT - obsProps.height
           // Elevate non-fatal obstacles sometimes
           if (!isFatalObstacle(obsProps.type) && Math.random() < OBSTACLE_ELEVATION_CHANCE) {
