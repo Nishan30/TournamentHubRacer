@@ -5,7 +5,7 @@ import { Toaster } from 'react-hot-toast'
 // Adjust paths as needed
 import { useGameCanvas } from '../components/mathJump/useGameCanvas'
 // Ensure this path is correct for your FinishedCanvasUI component
-import { FinishedCanvasUI } from '../ui/finishedCanvasUI'
+import { FinishedMathUI } from '../ui/finishedCanvasUI'
 import './MathJump.css' // Your CSS file
 
 // Constants matching the hook
@@ -89,7 +89,7 @@ export default function MathJump() {
           {gameState.gameOver && (
             // This div now provides the background/panel effect
             <div className="absolute inset-0 flex items-center justify-center z-10 bg-black bg-opacity-60 backdrop-blur-sm p-4 rounded-lg">
-              <FinishedCanvasUI score={gameState.player.value} onRestart={handleRestart} tournamentId={tournamentId} />
+              <FinishedMathUI score={gameState.player.value} onRestart={handleRestart} tournamentId={tournamentId} />
             </div>
           )}
           {/* Optional: Display score during gameplay */}
